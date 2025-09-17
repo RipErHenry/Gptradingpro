@@ -2,8 +2,8 @@ from fastapi import APIRouter, HTTPException, Depends, status
 from typing import Dict, List
 from datetime import datetime
 
-from ..models.user import ZaffexConnectionUpdate
-from ..services.zaffex_service import zaffex_service
+from models.user import ZaffexConnectionUpdate
+from services.zaffex_service import zaffex_service
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
 
