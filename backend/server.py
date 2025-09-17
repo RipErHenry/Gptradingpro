@@ -11,7 +11,7 @@ import uuid
 from datetime import datetime
 
 # Import route modules
-from .routes import bots, zaffex, portfolio
+from routes import bots, zaffex, portfolio
 
 
 ROOT_DIR = Path(__file__).parent
