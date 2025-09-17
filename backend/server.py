@@ -10,6 +10,9 @@ from typing import List
 import uuid
 from datetime import datetime
 
+# Import route modules
+from .routes import bots, zaffex, portfolio
+
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
@@ -19,12 +22,15 @@ mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
 
-# Create the main app without a prefix
-app = FastAPI()
+# Create the main app
+app = FastAPI(
+    title="GPTading Pro API",
+    description="API para la plataforma de trading automatizado GPTading Pro",
+    version="1.0.0"
+)
 
-# Create a router with the /api prefix
+# Create a router with the /api prefix for basic endpoints
 api_router = APIRouter(prefix="/api")
-
 
 # Define Models
 class StatusCheck(BaseModel):
@@ -35,10 +41,23 @@ class StatusCheck(BaseModel):
 class StatusCheckCreate(BaseModel):
     client_name: str
 
-# Add your routes to the router instead of directly to app
+# Basic API endpoints
 @api_router.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return {
+        "message": "GPTading Pro API v1.0.0", 
+        "status": "running",
+        "docs": "/docs"
+    }
+
+@api_router.get("/health")
+async def health_check():
+    """Health check endpoint"""
+    return {
+        "status": "healthy",
+        "timestamp": datetime.utcnow(),
+        "database": "connected"
+    }
 
 @api_router.post("/status", response_model=StatusCheck)
 async def create_status_check(input: StatusCheckCreate):
@@ -52,8 +71,13 @@ async def get_status_checks():
     status_checks = await db.status_checks.find().to_list(1000)
     return [StatusCheck(**status_check) for status_check in status_checks]
 
-# Include the router in the main app
+# Include the basic router
 app.include_router(api_router)
+
+# Include specialized routers
+app.include_router(bots.router)
+app.include_router(zaffex.router)
+app.include_router(portfolio.router)
 
 app.add_middleware(
     CORSMiddleware,
