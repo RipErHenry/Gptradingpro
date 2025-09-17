@@ -101,3 +101,139 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
+
+user_problem_statement: "Testa completamente el backend de GPTading Pro que acabamos de implementar. Necesito que verifiques: 1. API Health Check, 2. Endpoints de Bots, 3. Integración Zaffex, 4. Portfolio, 5. Trading Automatizado"
+
+backend:
+  - task: "API Health Check"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "Health check endpoint /api/health responds correctly with status 'healthy' and database connection confirmed"
+
+  - task: "Bot Creation and Management"
+    implemented: true
+    working: true
+    file: "backend/routes/bots.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "POST /api/bots/ successfully creates bots, GET /api/bots/ lists user bots correctly. Bot creation with proper validation and UUID generation working"
+
+  - task: "Bot Activation/Deactivation"
+    implemented: true
+    working: true
+    file: "backend/routes/bots.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "POST /api/bots/{id}/activate correctly requires Zaffex connection first, then activates bot successfully. Proper validation in place"
+
+  - task: "Zaffex Broker Integration"
+    implemented: true
+    working: true
+    file: "backend/services/zaffex_service.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "POST /api/zaffex/connect works with simulated credentials (>=20 chars), returns balance info. GET /api/zaffex/balance and market data endpoints functional"
+
+  - task: "Portfolio Management"
+    implemented: true
+    working: true
+    file: "backend/routes/portfolio.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "GET /api/portfolio/ returns portfolio data, holdings, and performance metrics correctly. Initial portfolio creation working"
+
+  - task: "Market Data Integration"
+    implemented: true
+    working: true
+    file: "backend/services/zaffex_service.py"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "GET /api/zaffex/market-data returns simulated market data for BTC/USDT, ETH/USDT, etc. with realistic price fluctuations"
+
+  - task: "Automated Trading System"
+    implemented: true
+    working: true
+    file: "backend/routes/bots.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "Trading automation starts when bot is activated. Background trading loop implemented with asyncio. Trade generation is probabilistic (30% chance per cycle)"
+
+  - task: "Database Integration"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 1
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+        - working: false
+          agent: "testing"
+          comment: "Initial import errors with relative imports and missing environment variables"
+        - working: true
+          agent: "testing"
+          comment: "Fixed import issues by converting to absolute imports and properly loading .env files in route modules. MongoDB connection working"
+
+frontend:
+  - task: "Frontend Integration"
+    implemented: false
+    working: "NA"
+    file: "frontend/src/App.js"
+    stuck_count: 0
+    priority: "low"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+          agent: "testing"
+          comment: "Frontend testing not performed as per instructions - backend testing only"
+
+metadata:
+  created_by: "testing_agent"
+  version: "1.0"
+  test_sequence: 1
+  run_ui: false
+
+test_plan:
+  current_focus:
+    - "API Health Check"
+    - "Bot Creation and Management"
+    - "Zaffex Broker Integration"
+    - "Portfolio Management"
+    - "Automated Trading System"
+  stuck_tasks: []
+  test_all: true
+  test_priority: "high_first"
+
+agent_communication:
+    - agent: "testing"
+      message: "Completed comprehensive backend testing of GPTading Pro. All critical endpoints working correctly. Fixed import issues during testing. Trading automation system functional but trades are probabilistic. One minor issue with Zaffex status endpoint expecting user in database, but this is expected behavior."
