@@ -3,8 +3,8 @@ from typing import List
 from datetime import datetime, timedelta
 import asyncio
 
-from ..models.portfolio import Portfolio, PortfolioResponse, AssetHolding, MarketData
-from ..services.zaffex_service import zaffex_service
+from models.portfolio import Portfolio, PortfolioResponse, AssetHolding, MarketData
+from services.zaffex_service import zaffex_service
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
 
