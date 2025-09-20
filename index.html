@@ -1026,10 +1026,25 @@
             const strategy = document.getElementById('bot-strategy').value;
             const risk = document.getElementById('bot-risk').value;
             const investment = document.getElementById('investment-slider').value;
+            const apiSelection = document.getElementById('bot-api').value;
             
             if (!name || !strategy) {
                 alert('Por favor completa todos los campos requeridos');
                 return;
+            }
+            
+            // Auto-assign API based on strategy if "auto" is selected
+            let assignedAPI = apiSelection;
+            if (apiSelection === 'auto') {
+                const strategyAPIs = {
+                    "Grid Trading": "api_001",
+                    "DCA + RSI": "api_002", 
+                    "Momentum Trading": "api_003",
+                    "High Frequency": "api_004",
+                    "Cross Exchange": "api_005",
+                    "Machine Learning": "api_006"
+                };
+                assignedAPI = strategyAPIs[strategy] || `api_${Math.random().toString(36).substr(2, 3)}`;
             }
             
             const newBot = {
@@ -1040,15 +1055,17 @@
                 profit: 0,
                 roi: 0,
                 accuracy: Math.floor(Math.random() * 20) + 80,
-                risk: risk
+                risk: risk,
+                apiId: assignedAPI,
+                investment: parseFloat(investment)
             };
             
             bots.push(newBot);
             closeCreateBotModal();
             loadBots();
             
-            // Show success message
-            alert('✅ Bot creado exitosamente: ' + name);
+            // Show success message with API info
+            alert(`✅ Bot creado exitosamente: ${name}\n🔗 API asignado: ${assignedAPI}\n💰 Inversión: $${investment}`);
         }
 
         // Zaffex Functions
