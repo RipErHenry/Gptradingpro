@@ -1068,6 +1068,29 @@
             alert(`✅ Bot creado exitosamente: ${name}\n🔗 API asignado: ${assignedAPI}\n💰 Inversión: $${investment}`);
         }
 
+        function showBotSettings(botId) {
+            const bot = bots.find(b => b.id === botId);
+            if (!bot) {
+                alert('❌ Bot no encontrado');
+                return;
+            }
+            
+            // Show bot configuration and API details
+            const apiInfo = botAPIs[bot.strategy] || { id: bot.apiId, status: 'unknown' };
+            
+            alert(`⚙️ Configuración del Bot: ${bot.name}
+            
+📊 Estrategia: ${bot.strategy}
+🎯 Nivel de Riesgo: ${bot.risk}
+💰 Ganancia Actual: ${bot.profit >= 0 ? '+' : ''}$${bot.profit.toLocaleString()}
+📈 ROI: ${bot.roi >= 0 ? '+' : ''}${bot.roi}%
+🎯 Precisión: ${bot.accuracy}%
+🔗 API Asignado: ${apiInfo.id}
+📡 Estado API: ${apiInfo.status}
+
+💡 Próximamente: Panel de configuración avanzada`);
+        }
+
         // Zaffex Functions
         function loginZaffex() {
             const email = document.getElementById('zaffex-email').value;
