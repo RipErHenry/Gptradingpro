@@ -889,7 +889,7 @@
                                     <i class="fas fa-${bot.isActive ? 'pause' : 'play'} mr-1"></i>
                                     ${bot.isActive ? 'Pausar' : 'Iniciar'}
                                 </button>
-                                <button class="btn-secondary text-sm">
+                                <button class="btn-secondary text-sm" onclick="showBotSettings(${bot.id})" title="Configuración y API">
                                     <i class="fas fa-cog"></i>
                                 </button>
                             </div>
