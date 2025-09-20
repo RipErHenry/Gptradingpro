@@ -799,6 +799,17 @@
         ];
 
         let isZaffexConnected = false;
+        let zaffexUser = null;
+        
+        // Bot API Configuration
+        let botAPIs = {
+            "Grid Trading": { id: "api_001", status: "active", lastUsed: "2024-01-15", trades: 1247 },
+            "DCA + RSI": { id: "api_002", status: "active", lastUsed: "2024-01-15", trades: 892 },
+            "Momentum Trading": { id: "api_003", status: "active", lastUsed: "2024-01-14", trades: 634 },
+            "High Frequency": { id: "api_004", status: "active", lastUsed: "2024-01-15", trades: 2341 },
+            "Cross Exchange": { id: "api_005", status: "active", lastUsed: "2024-01-15", trades: 445 },
+            "Machine Learning": { id: "api_006", status: "active", lastUsed: "2024-01-14", trades: 723 }
+        };
 
         // Navigation
         function showPage(pageId) {
