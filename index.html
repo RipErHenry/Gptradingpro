@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPTading Pro - Trading Automatizado Inteligente</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(59, 130, 246, 0.6);
+            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.2);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.4);
+        }
+        
+        .btn-secondary {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.5);
+            padding: 12px 24px;
+            border-radius: 8px;
+            color: #3b82f6;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(59, 130, 246, 0.2);
+            border-color: #3b82f6;
+        }
+        
+        .pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: .5;
+            }
+        }
+        
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0% { transform: translate(0, 0px); }
+            50% { transform: translate(0, -10px); }
+            100% { transform: translate(0, 0px); }
+        }
+        
+        .navbar {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .bot-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .active-page {
+            display: block;
+        }
+        
+        .nav-link.active {
+            color: #3b82f6;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 8px;
+        }
+        
+        .status-active {
+            background: #10b981;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        .status-inactive {
+            background: #6b7280;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        .profit-positive {
+            color: #10b981;
+        }
+        
+        .profit-negative {
+            color: #ef4444;
+        }
+        
+        .modal {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal-content {
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 16px;
+        }
+        
+        .form-input {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            color: white;
+            width: 100%;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar fixed top-0 left-0 right-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-robot text-white"></i>
+                    </div>
+                    <span class="text-xl font-bold gradient-text">GPTading Pro</span>
+                </div>
+                
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="#" onclick="showPage('home')" class="nav-link px-3 py-2 text-gray-300 hover:text-white transition-colors active">
+                        <i class="fas fa-home mr-2"></i>Inicio
+                    </a>
+                    <a href="#" onclick="showPage('dashboard')" class="nav-link px-3 py-2 text-gray-300 hover:text-white transition-colors">
+                        <i class="fas fa-chart-line mr-2"></i>Dashboard
+                    </a>
+                    <a href="#" onclick="showPage('bots')" class="nav-link px-3 py-2 text-gray-300 hover:text-white transition-colors">
+                        <i class="fas fa-robot mr-2"></i>Trading Bots
+                    </a>
+                    <a href="#" onclick="showPage('settings')" class="nav-link px-3 py-2 text-gray-300 hover:text-white transition-colors">
+                        <i class="fas fa-cog mr-2"></i>Configuración
+                    </a>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <button class="btn-secondary" onclick="openZaffexModal()">
+                        <i class="fas fa-link mr-2"></i>Conectar Zaffex
+                    </button>
+                    <div class="w-8 h-8 bg-gradient-to-br from-green-500 to-blue-500 rounded-full flex items-center justify-center">
+                        <i class="fas fa-user text-xs"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Home Page -->
+    <div id="home-page" class="page active-page">
+        <!-- Hero Section -->
+        <section class="relative pt-24 pb-32 px-4">
+            <div class="max-w-7xl mx-auto text-center">
+                <div class="inline-block bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-2 rounded-full text-sm mb-6">
+                    🚀 Nuevo: Integración avanzada con Zaffex
+                </div>
+                
+                <h1 class="text-5xl md:text-7xl font-bold mb-6">
+                    Trading Automatizado
+                    <br />
+                    <span class="gradient-text">Inteligente</span>
+                </h1>
+                
+                <p class="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
+                    Conecta con Zaffex y deja que nuestros bots de IA hagan el trabajo por ti.
+                    Operaciones automatizadas con el mayor porcentaje de ganancias en tiempo real.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+                    <button onclick="showPage('dashboard')" class="btn-primary px-8 py-4 text-lg">
+                        <i class="fas fa-play mr-2"></i>Empezar Trading
+                    </button>
+                    <button onclick="showDemoModal()" class="btn-secondary px-8 py-4 text-lg">
+                        <i class="fas fa-eye mr-2"></i>Ver Demo
+                    </button>
+                </div>
+                
+                <!-- Stats -->
+                <div class="stats-grid">
+                    <div class="card p-6 text-center floating">
+                        <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-users text-white"></i>
+                        </div>
+                        <div class="text-3xl font-bold text-white mb-2">12,847</div>
+                        <div class="text-gray-400">Usuarios Activos</div>
+                    </div>
+                    
+                    <div class="card p-6 text-center floating" style="animation-delay: 0.5s">
+                        <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-blue-500 rounded-lg flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-dollar-sign text-white"></i>
+                        </div>
+                        <div class="text-3xl font-bold text-white mb-2">$2.8M</div>
+                        <div class="text-gray-400">Ganancias Generadas</div>
+                    </div>
+                    
+                    <div class="card p-6 text-center floating" style="animation-delay: 1s">
+                        <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-chart-line text-white"></i>
+                        </div>
+                        <div class="text-3xl font-bold text-white mb-2">87.3%</div>
+                        <div class="text-gray-400">Precisión Promedio</div>
+                    </div>
+                    
+                    <div class="card p-6 text-center floating" style="animation-delay: 1.5s">
+                        <div class="w-12 h-12 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-lg flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-bolt text-white"></i>
+                        </div>
+                        <div class="text-3xl font-bold text-white mb-2">45,692</div>
+                        <div class="text-gray-400">Operaciones/Día</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Floating elements -->
+            <div class="absolute top-20 left-10 w-20 h-20 bg-blue-500 opacity-20 rounded-full blur-xl animate-pulse"></div>
+            <div class="absolute bottom-20 right-10 w-32 h-32 bg-purple-500 opacity-20 rounded-full blur-xl animate-pulse"></div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="px-4 py-20">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold text-white mb-4">
+                        Características Avanzadas
+                    </h2>
+                    <p class="text-xl text-gray-400 max-w-2xl mx-auto">
+                        Tecnología de vanguardia para maximizar tus ganancias en el mercado
+                    </p>
+                </div>
+                
+                <div class="bot-grid">
+                    <div class="card p-6 hover:scale-105 transition-transform">
+                        <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center mb-4">
+                            <i class="fas fa-robot text-white"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2">Trading Automatizado</h3>
+                        <p class="text-gray-400">Bots inteligentes que operan 24/7 con estrategias optimizadas por IA</p>
+                    </div>
+                    
+                    <div class="card p-6 hover:scale-105 transition-transform">
+                        <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-blue-500 rounded-lg flex items-center justify-center mb-4">
+                            <i class="fas fa-chart-line text-white"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2">Máxima Rentabilidad</h3>
+                        <p class="text-gray-400">Algoritmos avanzados para maximizar ganancias en tiempo real</p>
+                    </div>
+                    
+                    <div class="card p-6 hover:scale-105 transition-transform">
+                        <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center mb-4">
+                            <i class="fas fa-shield-alt text-white"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2">Gestión de Riesgo</h3>
+                        <p class="text-gray-400">Perfiles de riesgo personalizables: Conservador, Moderado, Agresivo</p>
+                    </div>
+                    
+                    <div class="card p-6 hover:scale-105 transition-transform">
+                        <div class="w-12 h-12 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-lg flex items-center justify-center mb-4">
+                            <i class="fas fa-bolt text-white"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2">Ejecución Instantánea</h3>
+                        <p class="text-gray-400">Conexión directa con Zaffex para operaciones ultrarrápidas</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="px-4 py-20 bg-gradient-to-r from-blue-900/50 to-purple-900/50">
+            <div class="max-w-4xl mx-auto text-center">
+                <h2 class="text-4xl font-bold text-white mb-4">
+                    ¿Listo para Automatizar tu Trading?
+                </h2>
+                <p class="text-xl text-gray-300 mb-8">
+                    Únete a miles de traders que ya están generando ganancias pasivas con GPTading Pro
+                </p>
+                <button onclick="showPage('dashboard')" class="btn-primary px-12 py-6 text-lg">
+                    <i class="fas fa-rocket mr-2"></i>Comenzar Ahora
+                </button>
+            </div>
+        </section>
+    </div>
+
+    <!-- Dashboard Page -->
+    <div id="dashboard-page" class="page hidden pt-24 px-4">
+        <div class="max-w-7xl mx-auto">
+            <!-- Header -->
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <h1 class="text-3xl font-bold text-white">Dashboard</h1>
+                    <p class="text-gray-400">Monitorea tus bots y ganancias en tiempo real</p>
+                </div>
+                <button class="btn-primary" onclick="updateDashboard()">
+                    <i class="fas fa-sync-alt mr-2"></i>Actualizar
+                </button>
+            </div>
+
+            <!-- Portfolio Overview -->
+            <div class="stats-grid mb-8">
+                <div class="card p-6">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-gray-400 text-sm">Balance Total</span>
+                        <i class="fas fa-dollar-sign text-gray-400"></i>
+                    </div>
+                    <div class="text-2xl font-bold text-white" id="total-balance">$47,650</div>
+                    <p class="text-xs text-gray-400">+$7,650 desde inicio</p>
+                </div>
+
+                <div class="card p-6">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-gray-400 text-sm">Ganancia Hoy</span>
+                        <i class="fas fa-chart-line text-green-400"></i>
+                    </div>
+                    <div class="text-2xl font-bold text-green-400" id="daily-profit">+$1,235</div>
+                    <p class="text-xs text-gray-400">+2.68% en las últimas 24h</p>
+                </div>
+
+                <div class="card p-6">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-gray-400 text-sm">Bots Activos</span>
+                        <i class="fas fa-robot text-blue-400"></i>
+                    </div>
+                    <div class="text-2xl font-bold text-white" id="active-bots">4/6</div>
+                    <p class="text-xs text-gray-400">4 bots operando</p>
+                </div>
+
+                <div class="card p-6">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-gray-400 text-sm">Precisión</span>
+                        <i class="fas fa-bullseye text-purple-400"></i>
+                    </div>
+                    <div class="text-2xl font-bold text-white">86.7%</div>
+                    <p class="text-xs text-gray-400">Promedio de operaciones exitosas</p>
+                </div>
+            </div>
+
+            <!-- Trading Bots Grid -->
+            <div class="bot-grid" id="dashboard-bots">
+                <!-- Los bots se cargarán dinámicamente -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Bots Page -->
+    <div id="bots-page" class="page hidden pt-24 px-4">
+        <div class="max-w-7xl mx-auto">
+            <!-- Header -->
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <h1 class="text-3xl font-bold text-white">Trading Bots</h1>
+                    <p class="text-gray-400">Gestiona y configura tus bots de trading automatizado</p>
+                </div>
+                <button class="btn-primary" onclick="openCreateBotModal()">
+                    <i class="fas fa-plus mr-2"></i>Crear Bot
+                </button>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-grid mb-8">
+                <div class="card p-6">
+                    <div class="flex items-center space-x-2 mb-2">
+                        <i class="fas fa-robot text-blue-400"></i>
+                        <span class="text-gray-400 text-sm">Total Bots</span>
+                    </div>
+                    <div class="text-2xl font-bold text-white">6</div>
+                </div>
+                
+                <div class="card p-6">
+                    <div class="flex items-center space-x-2 mb-2">
+                        <i class="fas fa-play text-green-400"></i>
+                        <span class="text-gray-400 text-sm">Activos</span>
+                    </div>
+                    <div class="text-2xl font-bold text-white">4</div>
+                </div>
+                
+                <div class="card p-6">
+                    <div class="flex items-center space-x-2 mb-2">
+                        <i class="fas fa-chart-line text-green-400"></i>
+                        <span class="text-gray-400 text-sm">Ganancia Total</span>
+                    </div>
+                    <div class="text-2xl font-bold text-green-400">+$12,397</div>
+                </div>
+                
+                <div class="card p-6">
+                    <div class="flex items-center space-x-2 mb-2">
+                        <i class="fas fa-percentage text-purple-400"></i>
+                        <span class="text-gray-400 text-sm">ROI Promedio</span>
+                    </div>
+                    <div class="text-2xl font-bold text-white">10.5%</div>
+                </div>
+            </div>
+
+            <!-- Bots Grid -->
+            <div class="bot-grid" id="bots-grid">
+                <!-- Los bots se cargarán dinámicamente -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Page -->
+    <div id="settings-page" class="page hidden pt-24 px-4">
+        <div class="max-w-4xl mx-auto">
+            <div class="mb-6">
+                <h1 class="text-3xl font-bold text-white">Configuración</h1>
+                <p class="text-gray-400">Administra tu cuenta y configuraciones de trading</p>
+            </div>
+
+            <!-- Zaffex Configuration -->
+            <div class="card p-6 mb-6">
+                <div class="flex items-center space-x-2 mb-4">
+                    <i class="fas fa-link text-blue-400"></i>
+                    <h3 class="text-xl font-bold text-white">Conexión con Zaffex</h3>
+                </div>
+                <p class="text-gray-400 mb-6">
+                    Conecta tu cuenta de Zaffex para habilitar el trading automatizado
+                </p>
+
+                <div id="zaffex-disconnected" class="zaffex-status">
+                    <div class="bg-orange-500/10 border border-orange-500/50 rounded-lg p-4 mb-6">
+                        <div class="flex items-center text-orange-300">
+                            <i class="fas fa-exclamation-triangle mr-2"></i>
+                            Necesitas crear tokens API en tu cuenta de Zaffex. Ve a: Configuración → API → Crear Nueva Clave
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4 mb-6">
+                        <div>
+                            <label class="block text-gray-300 mb-2">API Key</label>
+                            <input type="password" id="zaffex-api-key" placeholder="Tu API Key de Zaffex" 
+                                   class="form-input" value="demo_api_key_12345678901234567890">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-gray-300 mb-2">API Secret</label>
+                            <input type="password" id="zaffex-api-secret" placeholder="Tu API Secret de Zaffex" 
+                                   class="form-input" value="demo_api_secret_12345678901234567890">
+                        </div>
+                        
+                        <div class="flex items-center space-x-2">
+                            <input type="checkbox" id="show-keys" class="form-checkbox">
+                            <label for="show-keys" class="text-gray-300">Mostrar claves</label>
+                        </div>
+                        
+                        <div class="flex items-center space-x-2">
+                            <input type="checkbox" id="test-mode" class="form-checkbox" checked>
+                            <label for="test-mode" class="text-gray-300">Modo de prueba (recomendado)</label>
+                        </div>
+                    </div>
+                    
+                    <button class="btn-primary w-full" onclick="connectZaffex()">
+                        <i class="fas fa-link mr-2"></i>Conectar con Zaffex
+                    </button>
+                </div>
+
+                <div id="zaffex-connected" class="zaffex-status hidden">
+                    <div class="bg-green-500/10 border border-green-500/50 rounded-lg p-4 mb-6">
+                        <div class="flex items-center text-green-300">
+                            <i class="fas fa-check-circle mr-2"></i>
+                            ¡Conexión exitosa! Tu cuenta de Zaffex está conectada y lista para el trading automatizado.
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                        <div>
+                            <div class="text-gray-300 mb-2">Estado de la Conexión</div>
+                            <div class="flex items-center space-x-2">
+                                <div class="w-3 h-3 bg-green-400 rounded-full pulse"></div>
+                                <span class="status-active">Conectado</span>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="text-gray-300 mb-2">Modo</div>
+                            <span class="bg-orange-500 text-white px-2 py-1 rounded text-sm">Prueba</span>
+                        </div>
+                    </div>
+                    
+                    <button class="btn-secondary" onclick="disconnectZaffex()">
+                        <i class="fas fa-unlink mr-2"></i>Desconectar Cuenta
+                    </button>
+                </div>
+            </div>
+
+            <!-- Balance Information -->
+            <div id="balance-info" class="card p-6 hidden">
+                <h3 class="text-xl font-bold text-white mb-4">Información de la Cuenta</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="text-center p-4 bg-gray-700/50 rounded-lg">
+                        <div class="text-2xl font-bold text-white">$12,450</div>
+                        <div class="text-gray-400 text-sm">Balance Total</div>
+                    </div>
+                    <div class="text-center p-4 bg-gray-700/50 rounded-lg">
+                        <div class="text-2xl font-bold text-green-400">$8,320</div>
+                        <div class="text-gray-400 text-sm">Disponible</div>
+                    </div>
+                    <div class="text-center p-4 bg-gray-700/50 rounded-lg">
+                        <div class="text-2xl font-bold text-orange-400">$4,130</div>
+                        <div class="text-gray-400 text-sm">En Operaciones</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <!-- Zaffex Connection Modal -->
+    <div id="zaffex-modal" class="modal fixed inset-0 flex items-center justify-center z-50 hidden">
+        <div class="modal-content max-w-md w-full mx-4 p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold text-white">Conexión Rápida Zaffex</h3>
+                <button onclick="closeZaffexModal()" class="text-gray-400 hover:text-white">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="space-y-4">
+                <p class="text-gray-300">¿Quieres usar credenciales demo o reales?</p>
+                <div class="grid grid-cols-2 gap-4">
+                    <button class="btn-primary w-full" onclick="useDemoCredentials()">
+                        <i class="fas fa-play mr-2"></i>Demo
+                    </button>
+                    <button class="btn-secondary w-full" onclick="useRealCredentials()">
+                        <i class="fas fa-dollar-sign mr-2"></i>Real
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Bot Modal -->
+    <div id="create-bot-modal" class="modal fixed inset-0 flex items-center justify-center z-50 hidden">
+        <div class="modal-content max-w-md w-full mx-4 p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold text-white">Crear Nuevo Bot</h3>
+                <button onclick="closeCreateBotModal()" class="text-gray-400 hover:text-white">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-gray-300 mb-2">Nombre del Bot</label>
+                    <input type="text" id="bot-name" placeholder="Mi Bot de Trading" class="form-input">
+                </div>
+                
+                <div>
+                    <label class="block text-gray-300 mb-2">Estrategia</label>
+                    <select id="bot-strategy" class="form-input">
+                        <option value="">Selecciona una estrategia</option>
+                        <option value="Grid Trading">Grid Trading</option>
+                        <option value="DCA + RSI">DCA + RSI</option>
+                        <option value="Momentum Trading">Momentum Trading</option>
+                        <option value="High Frequency">High Frequency</option>
+                        <option value="Cross Exchange">Cross Exchange</option>
+                        <option value="Machine Learning">Machine Learning</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block text-gray-300 mb-2">Nivel de Riesgo</label>
+                    <select id="bot-risk" class="form-input">
+                        <option value="Bajo">Bajo - Operaciones conservadoras</option>
+                        <option value="Medio" selected>Medio - Balance riesgo/ganancia</option>
+                        <option value="Alto">Alto - Máxima rentabilidad</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block text-gray-300 mb-2">Inversión Inicial: $<span id="investment-amount">1000</span></label>
+                    <input type="range" id="investment-slider" min="100" max="10000" value="1000" step="100" 
+                           class="w-full" oninput="updateInvestmentAmount(this.value)">
+                </div>
+                
+                <div class="flex space-x-2">
+                    <button class="btn-secondary flex-1" onclick="closeCreateBotModal()">Cancelar</button>
+                    <button class="btn-primary flex-1" onclick="createBot()">Crear Bot</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Demo Modal -->
+    <div id="demo-modal" class="modal fixed inset-0 flex items-center justify-center z-50 hidden">
+        <div class="modal-content max-w-2xl w-full mx-4 p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold text-white">Demo GPTading Pro</h3>
+                <button onclick="closeDemoModal()" class="text-gray-400 hover:text-white">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="space-y-4">
+                <p class="text-gray-300">GPTading Pro está funcionando en modo demo con las siguientes características:</p>
+                <ul class="list-disc list-inside text-gray-300 space-y-2">
+                    <li>6 estrategias de trading automatizado</li>
+                    <li>Datos de mercado simulados en tiempo real</li>
+                    <li>Conexión simulada con Zaffex broker</li>
+                    <li>Portfolio y ganancias ficticias</li>
+                    <li>Todas las funciones operativas sin riesgo</li>
+                </ul>
+                <div class="bg-blue-500/10 border border-blue-500/50 rounded-lg p-4">
+                    <div class="text-blue-300 mb-2">
+                        <i class="fas fa-info-circle mr-2"></i>Credenciales Demo Incluidas:
+                    </div>
+                    <div class="text-sm text-gray-300 space-y-1">
+                        <div>API Key: demo_api_key_12345678901234567890</div>
+                        <div>API Secret: demo_api_secret_12345678901234567890</div>
+                    </div>
+                </div>
+                <button class="btn-primary w-full" onclick="closeDemoModal(); showPage('dashboard')">
+                    <i class="fas fa-rocket mr-2"></i>Probar Demo Ahora
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data Storage
+        let bots = [
+            {
+                id: 1,
+                name: "Bot Conservador",
+                strategy: "Grid Trading",
+                isActive: true,
+                profit: 2450,
+                roi: 12.3,
+                accuracy: 87,
+                risk: "Bajo"
+            },
+            {
+                id: 2,
+                name: "Bot Moderado",
+                strategy: "DCA + RSI",
+                isActive: true,
+                profit: 3780,
+                roi: 18.9,
+                accuracy: 79,
+                risk: "Medio"
+            },
+            {
+                id: 3,
+                name: "Bot Agresivo",
+                strategy: "Momentum Trading",
+                isActive: false,
+                profit: -850,
+                roi: -4.2,
+                accuracy: 92,
+                risk: "Alto"
+            },
+            {
+                id: 4,
+                name: "Scalping Bot",
+                strategy: "High Frequency",
+                isActive: true,
+                profit: 1280,
+                roi: 8.4,
+                accuracy: 94,
+                risk: "Medio"
+            },
+            {
+                id: 5,
+                name: "Arbitrage Bot",
+                strategy: "Cross Exchange",
+                isActive: true,
+                profit: 567,
+                roi: 3.2,
+                accuracy: 96,
+                risk: "Bajo"
+            },
+            {
+                id: 6,
+                name: "AI Predictor",
+                strategy: "Machine Learning",
+                isActive: false,
+                profit: 4320,
+                roi: 24.1,
+                accuracy: 82,
+                risk: "Alto"
+            }
+        ];
+
+        let isZaffexConnected = false;
+
+        // Navigation
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active-page');
+                page.classList.add('hidden');
+            });
+            
+            // Show selected page
+            const targetPage = document.getElementById(pageId + '-page');
+            if (targetPage) {
+                targetPage.classList.remove('hidden');
+                targetPage.classList.add('active-page');
+            }
+            
+            // Update navigation
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            event.target.classList.add('active');
+            
+            // Load page specific content
+            if (pageId === 'dashboard') {
+                loadDashboard();
+            } else if (pageId === 'bots') {
+                loadBots();
+            }
+        }
+
+        // Dashboard Functions
+        function loadDashboard() {
+            const dashboardBots = document.getElementById('dashboard-bots');
+            dashboardBots.innerHTML = '';
+            
+            bots.slice(0, 6).forEach(bot => {
+                dashboardBots.innerHTML += `
+                    <div class="card p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="text-white text-lg font-bold flex items-center">
+                                    <i class="fas fa-robot mr-2"></i>${bot.name}
+                                </h3>
+                                <p class="text-gray-400">${bot.strategy}</p>
+                            </div>
+                            <span class="${bot.isActive ? 'status-active' : 'status-inactive'}">
+                                ${bot.isActive ? 'Activo' : 'Inactivo'}
+                            </span>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-400">Ganancia:</span>
+                                <span class="${bot.profit >= 0 ? 'profit-positive' : 'profit-negative'} font-bold">
+                                    ${bot.profit >= 0 ? '+' : ''}$${bot.profit.toLocaleString()}
+                                </span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-400">ROI:</span>
+                                <span class="${bot.roi >= 0 ? 'profit-positive' : 'profit-negative'} font-bold">
+                                    ${bot.roi >= 0 ? '+' : ''}${bot.roi}%
+                                </span>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-400">Precisión:</span>
+                                    <span class="text-white">${bot.accuracy}%</span>
+                                </div>
+                                <div class="w-full bg-gray-700 rounded-full h-2">
+                                    <div class="bg-gradient-to-r from-blue-600 to-purple-600 h-2 rounded-full" 
+                                         style="width: ${bot.accuracy}%"></div>
+                                </div>
+                            </div>
+                            <div class="flex gap-2">
+                                <button class="${bot.isActive ? 'btn-secondary' : 'btn-primary'} flex-1 text-sm" 
+                                        onclick="toggleBot(${bot.id})">
+                                    <i class="fas fa-${bot.isActive ? 'pause' : 'play'} mr-1"></i>
+                                    ${bot.isActive ? 'Pausar' : 'Iniciar'}
+                                </button>
+                                <button class="btn-secondary text-sm">
+                                    <i class="fas fa-cog"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function loadBots() {
+            const botsGrid = document.getElementById('bots-grid');
+            botsGrid.innerHTML = '';
+            
+            bots.forEach(bot => {
+                const riskColor = bot.risk === 'Alto' ? 'border-red-500 text-red-400' : 
+                                bot.risk === 'Medio' ? 'border-yellow-500 text-yellow-400' : 
+                                'border-green-500 text-green-400';
+                
+                botsGrid.innerHTML += `
+                    <div class="card p-6 hover:border-blue-500/50 transition-colors">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="text-white text-lg font-bold flex items-center">
+                                    <i class="fas fa-robot mr-2"></i>${bot.name}
+                                </h3>
+                                <p class="text-gray-400">${bot.strategy}</p>
+                            </div>
+                            <span class="${bot.isActive ? 'status-active' : 'status-inactive'}">
+                                ${bot.isActive ? 'Activo' : 'Inactivo'}
+                            </span>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <div class="text-xs text-gray-400 mb-1">Ganancia</div>
+                                    <div class="${bot.profit >= 0 ? 'profit-positive' : 'profit-negative'} font-bold text-lg">
+                                        ${bot.profit >= 0 ? '+' : ''}$${bot.profit.toLocaleString()}
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="text-xs text-gray-400 mb-1">ROI</div>
+                                    <div class="${bot.roi >= 0 ? 'profit-positive' : 'profit-negative'} font-bold text-lg">
+                                        ${bot.roi >= 0 ? '+' : ''}${bot.roi}%
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between text-sm mb-2">
+                                    <span class="text-gray-400">Precisión:</span>
+                                    <span class="text-white">${bot.accuracy}%</span>
+                                </div>
+                                <div class="w-full bg-gray-700 rounded-full h-2">
+                                    <div class="bg-gradient-to-r from-blue-600 to-purple-600 h-2 rounded-full" 
+                                         style="width: ${bot.accuracy}%"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex justify-between text-xs">
+                                <span class="text-gray-400">Riesgo:</span>
+                                <span class="px-2 py-1 rounded text-xs border ${riskColor}">
+                                    ${bot.risk}
+                                </span>
+                            </div>
+                            
+                            <div class="flex gap-2">
+                                <button class="${bot.isActive ? 'btn-secondary' : 'btn-primary'} flex-1 text-sm" 
+                                        onclick="toggleBot(${bot.id})">
+                                    <i class="fas fa-${bot.isActive ? 'pause' : 'play'} mr-1"></i>
+                                    ${bot.isActive ? 'Pausar' : 'Iniciar'}
+                                </button>
+                                <button class="btn-secondary text-sm">
+                                    <i class="fas fa-cog"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // Bot Functions
+        function toggleBot(botId) {
+            if (!isZaffexConnected) {
+                alert('⚠️ Debes conectar tu cuenta de Zaffex primero. Ve a Configuración → Zaffex API');
+                showPage('settings');
+                return;
+            }
+            
+            const bot = bots.find(b => b.id === botId);
+            if (bot) {
+                bot.isActive = !bot.isActive;
+                
+                // Simulate trading activity
+                if (bot.isActive) {
+                    setTimeout(() => simulateTrading(botId), 3000);
+                }
+                
+                // Reload current page
+                const currentPage = document.querySelector('.page.active-page').id.replace('-page', '');
+                if (currentPage === 'dashboard') {
+                    loadDashboard();
+                } else if (currentPage === 'bots') {
+                    loadBots();
+                }
+            }
+        }
+
+        function simulateTrading(botId) {
+            const bot = bots.find(b => b.id === botId);
+            if (bot && bot.isActive) {
+                // Simulate profit/loss
+                const change = (Math.random() - 0.5) * 200;
+                bot.profit += change;
+                
+                // Update ROI
+                bot.roi = ((bot.profit / 1000) * 100);
+                
+                // Reload dashboard if visible
+                const dashboardPage = document.getElementById('dashboard-page');
+                if (dashboardPage && !dashboardPage.classList.contains('hidden')) {
+                    loadDashboard();
+                }
+                
+                // Continue trading simulation
+                if (bot.isActive) {
+                    setTimeout(() => simulateTrading(botId), Math.random() * 10000 + 5000);
+                }
+            }
+        }
+
+        function createBot() {
+            const name = document.getElementById('bot-name').value;
+            const strategy = document.getElementById('bot-strategy').value;
+            const risk = document.getElementById('bot-risk').value;
+            const investment = document.getElementById('investment-slider').value;
+            
+            if (!name || !strategy) {
+                alert('Por favor completa todos los campos requeridos');
+                return;
+            }
+            
+            const newBot = {
+                id: bots.length + 1,
+                name: name,
+                strategy: strategy,
+                isActive: false,
+                profit: 0,
+                roi: 0,
+                accuracy: Math.floor(Math.random() * 20) + 80,
+                risk: risk
+            };
+            
+            bots.push(newBot);
+            closeCreateBotModal();
+            loadBots();
+            
+            // Show success message
+            alert('✅ Bot creado exitosamente: ' + name);
+        }
+
+        // Zaffex Functions
+        function connectZaffex() {
+            const apiKey = document.getElementById('zaffex-api-key').value;
+            const apiSecret = document.getElementById('zaffex-api-secret').value;
+            
+            if (!apiKey || !apiSecret) {
+                alert('Por favor ingresa tu API Key y Secret de Zaffex');
+                return;
+            }
+            
+            // Simulate connection
+            setTimeout(() => {
+                isZaffexConnected = true;
+                document.getElementById('zaffex-disconnected').classList.add('hidden');
+                document.getElementById('zaffex-connected').classList.remove('hidden');
+                document.getElementById('balance-info').classList.remove('hidden');
+                
+                alert('✅ ¡Conexión con Zaffex exitosa!');
+            }, 2000);
+        }
+
+        function disconnectZaffex() {
+            isZaffexConnected = false;
+            document.getElementById('zaffex-disconnected').classList.remove('hidden');
+            document.getElementById('zaffex-connected').classList.add('hidden');
+            document.getElementById('balance-info').classList.add('hidden');
+            
+            alert('Desconectado de Zaffex');
+        }
+
+        function useDemoCredentials() {
+            document.getElementById('zaffex-api-key').value = 'demo_api_key_12345678901234567890';
+            document.getElementById('zaffex-api-secret').value = 'demo_api_secret_12345678901234567890';
+            document.getElementById('test-mode').checked = true;
+            closeZaffexModal();
+            showPage('settings');
+        }
+
+        function useRealCredentials() {
+            document.getElementById('zaffex-api-key').value = '';
+            document.getElementById('zaffex-api-secret').value = '';
+            document.getElementById('test-mode').checked = false;
+            closeZaffexModal();
+            showPage('settings');
+            alert('⚠️ IMPORTANTE: Vas a usar credenciales reales. Esto implica dinero real en riesgo.');
+        }
+
+        // Modal Functions
+        function openZaffexModal() {
+            document.getElementById('zaffex-modal').classList.remove('hidden');
+        }
+
+        function closeZaffexModal() {
+            document.getElementById('zaffex-modal').classList.add('hidden');
+        }
+
+        function openCreateBotModal() {
+            document.getElementById('create-bot-modal').classList.remove('hidden');
+        }
+
+        function closeCreateBotModal() {
+            document.getElementById('create-bot-modal').classList.add('hidden');
+            // Reset form
+            document.getElementById('bot-name').value = '';
+            document.getElementById('bot-strategy').value = '';
+            document.getElementById('bot-risk').value = 'Medio';
+            document.getElementById('investment-slider').value = '1000';
+            updateInvestmentAmount('1000');
+        }
+
+        function showDemoModal() {
+            document.getElementById('demo-modal').classList.remove('hidden');
+        }
+
+        function closeDemoModal() {
+            document.getElementById('demo-modal').classList.add('hidden');
+        }
+
+        // Utility Functions
+        function updateInvestmentAmount(value) {
+            document.getElementById('investment-amount').textContent = value;
+        }
+
+        function updateDashboard() {
+            // Simulate data refresh
+            document.getElementById('total-balance').textContent = '$' + (Math.random() * 10000 + 40000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            document.getElementById('daily-profit').textContent = '+$' + (Math.random() * 1000 + 500).toFixed(0);
+            
+            loadDashboard();
+            alert('✅ Dashboard actualizado');
+        }
+
+        // Event Listeners
+        document.getElementById('show-keys').addEventListener('change', function() {
+            const apiKeyInput = document.getElementById('zaffex-api-key');
+            const apiSecretInput = document.getElementById('zaffex-api-secret');
+            
+            if (this.checked) {
+                apiKeyInput.type = 'text';
+                apiSecretInput.type = 'text';
+            } else {
+                apiKeyInput.type = 'password';
+                apiSecretInput.type = 'password';
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Auto-update dashboard every 30 seconds
+            setInterval(() => {
+                if (!document.getElementById('dashboard-page').classList.contains('hidden')) {
+                    updateDashboard();
+                }
+            }, 30000);
+            
+            // Load initial dashboard
+            loadDashboard();
+            loadBots();
+        });
+
+        // Auto-execute demo connection on load
+        setTimeout(() => {
+            if (!isZaffexConnected) {
+                useDemoCredentials();
+                setTimeout(connectZaffex, 1000);
+            }
+        }, 2000);
+    </script>
+</body>
+</html>
