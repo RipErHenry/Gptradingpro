@@ -1227,20 +1227,20 @@
         }
 
         function useDemoCredentials() {
-            document.getElementById('zaffex-api-key').value = 'demo_api_key_12345678901234567890';
-            document.getElementById('zaffex-api-secret').value = 'demo_api_secret_12345678901234567890';
-            document.getElementById('test-mode').checked = true;
+            document.getElementById('zaffex-email').value = 'demo@zaffex.com';
+            document.getElementById('zaffex-password').value = 'demo123456';
+            document.getElementById('demo-account').checked = true;
             closeZaffexModal();
             showPage('settings');
         }
 
         function useRealCredentials() {
-            document.getElementById('zaffex-api-key').value = '';
-            document.getElementById('zaffex-api-secret').value = '';
-            document.getElementById('test-mode').checked = false;
+            document.getElementById('zaffex-email').value = '';
+            document.getElementById('zaffex-password').value = '';
+            document.getElementById('demo-account').checked = false;
             closeZaffexModal();
             showPage('settings');
-            alert('⚠️ IMPORTANTE: Vas a usar credenciales reales. Esto implica dinero real en riesgo.');
+            alert('⚠️ IMPORTANTE: Vas a usar tu cuenta real de Zaffex. Esto implica dinero real en riesgo.');
         }
 
         // Modal Functions
