@@ -671,6 +671,20 @@
                            class="w-full" oninput="updateInvestmentAmount(this.value)">
                 </div>
                 
+                <div>
+                    <label class="block text-gray-300 mb-2">API Zaffex Específico</label>
+                    <select id="bot-api" class="form-input">
+                        <option value="auto">Asignar automáticamente</option>
+                        <option value="api_001">API-001 (Grid Trading optimizado)</option>
+                        <option value="api_002">API-002 (DCA especializado)</option>
+                        <option value="api_003">API-003 (Momentum avanzado)</option>
+                        <option value="api_004">API-004 (High Frequency)</option>
+                        <option value="api_005">API-005 (Arbitrage)</option>
+                        <option value="api_006">API-006 (Machine Learning)</option>
+                    </select>
+                    <p class="text-gray-400 text-xs mt-1">Cada estrategia puede usar un API optimizado diferente</p>
+                </div>
+                
                 <div class="flex space-x-2">
                     <button class="btn-secondary flex-1" onclick="closeCreateBotModal()">Cancelar</button>
                     <button class="btn-primary flex-1" onclick="createBot()">Crear Bot</button>
