@@ -483,50 +483,50 @@
                 <p class="text-gray-400">Administra tu cuenta y configuraciones de trading</p>
             </div>
 
-            <!-- Zaffex Configuration -->
+            <!-- Zaffex Account Configuration -->
             <div class="card p-6 mb-6">
                 <div class="flex items-center space-x-2 mb-4">
-                    <i class="fas fa-link text-blue-400"></i>
-                    <h3 class="text-xl font-bold text-white">Conexión con Zaffex</h3>
+                    <i class="fas fa-user-circle text-blue-400"></i>
+                    <h3 class="text-xl font-bold text-white">Cuenta de Zaffex</h3>
                 </div>
                 <p class="text-gray-400 mb-6">
-                    Conecta tu cuenta de Zaffex para habilitar el trading automatizado
+                    Conecta tu cuenta de Zaffex usando tus credenciales de acceso
                 </p>
 
                 <div id="zaffex-disconnected" class="zaffex-status">
-                    <div class="bg-orange-500/10 border border-orange-500/50 rounded-lg p-4 mb-6">
-                        <div class="flex items-center text-orange-300">
-                            <i class="fas fa-exclamation-triangle mr-2"></i>
-                            Necesitas crear tokens API en tu cuenta de Zaffex. Ve a: Configuración → API → Crear Nueva Clave
+                    <div class="bg-blue-500/10 border border-blue-500/50 rounded-lg p-4 mb-6">
+                        <div class="flex items-center text-blue-300">
+                            <i class="fas fa-info-circle mr-2"></i>
+                            Ingresa las credenciales de tu cuenta de Zaffex para conectar todos tus bots automáticamente
                         </div>
                     </div>
                     
                     <div class="space-y-4 mb-6">
                         <div>
-                            <label class="block text-gray-300 mb-2">API Key</label>
-                            <input type="password" id="zaffex-api-key" placeholder="Tu API Key de Zaffex" 
-                                   class="form-input" value="demo_api_key_12345678901234567890">
+                            <label class="block text-gray-300 mb-2">Correo Electrónico</label>
+                            <input type="email" id="zaffex-email" placeholder="tu@correo.com" 
+                                   class="form-input" value="demo@zaffex.com">
                         </div>
                         
                         <div>
-                            <label class="block text-gray-300 mb-2">API Secret</label>
-                            <input type="password" id="zaffex-api-secret" placeholder="Tu API Secret de Zaffex" 
-                                   class="form-input" value="demo_api_secret_12345678901234567890">
+                            <label class="block text-gray-300 mb-2">Contraseña</label>
+                            <input type="password" id="zaffex-password" placeholder="Tu contraseña de Zaffex" 
+                                   class="form-input" value="demo123456">
                         </div>
                         
                         <div class="flex items-center space-x-2">
-                            <input type="checkbox" id="show-keys" class="form-checkbox">
-                            <label for="show-keys" class="text-gray-300">Mostrar claves</label>
+                            <input type="checkbox" id="show-password" class="form-checkbox">
+                            <label for="show-password" class="text-gray-300">Mostrar contraseña</label>
                         </div>
                         
                         <div class="flex items-center space-x-2">
-                            <input type="checkbox" id="test-mode" class="form-checkbox" checked>
-                            <label for="test-mode" class="text-gray-300">Modo de prueba (recomendado)</label>
+                            <input type="checkbox" id="demo-account" class="form-checkbox" checked>
+                            <label for="demo-account" class="text-gray-300">Usar cuenta demo (recomendado)</label>
                         </div>
                     </div>
                     
-                    <button class="btn-primary w-full" onclick="connectZaffex()">
-                        <i class="fas fa-link mr-2"></i>Conectar con Zaffex
+                    <button class="btn-primary w-full" onclick="loginZaffex()">
+                        <i class="fas fa-sign-in-alt mr-2"></i>Conectar Cuenta Zaffex
                     </button>
                 </div>
 
@@ -534,27 +534,51 @@
                     <div class="bg-green-500/10 border border-green-500/50 rounded-lg p-4 mb-6">
                         <div class="flex items-center text-green-300">
                             <i class="fas fa-check-circle mr-2"></i>
-                            ¡Conexión exitosa! Tu cuenta de Zaffex está conectada y lista para el trading automatizado.
+                            ¡Sesión iniciada! Tu cuenta de Zaffex está conectada y sincronizada con GPTading Pro.
                         </div>
                     </div>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                         <div>
-                            <div class="text-gray-300 mb-2">Estado de la Conexión</div>
+                            <div class="text-gray-300 mb-2">Usuario Conectado</div>
                             <div class="flex items-center space-x-2">
                                 <div class="w-3 h-3 bg-green-400 rounded-full pulse"></div>
-                                <span class="status-active">Conectado</span>
+                                <span class="text-white" id="connected-user">demo@zaffex.com</span>
                             </div>
                         </div>
                         
                         <div>
-                            <div class="text-gray-300 mb-2">Modo</div>
-                            <span class="bg-orange-500 text-white px-2 py-1 rounded text-sm">Prueba</span>
+                            <div class="text-gray-300 mb-2">Tipo de Cuenta</div>
+                            <span class="bg-orange-500 text-white px-2 py-1 rounded text-sm" id="account-type">Demo</span>
                         </div>
                     </div>
                     
-                    <button class="btn-secondary" onclick="disconnectZaffex()">
-                        <i class="fas fa-unlink mr-2"></i>Desconectar Cuenta
+                    <button class="btn-secondary" onclick="logoutZaffex()">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Cerrar Sesión
+                    </button>
+                </div>
+            </div>
+
+            <!-- Bot API Configuration -->
+            <div class="card p-6 mb-6">
+                <div class="flex items-center space-x-2 mb-4">
+                    <i class="fas fa-cogs text-purple-400"></i>
+                    <h3 class="text-xl font-bold text-white">APIs por Tipo de Bot</h3>
+                </div>
+                <p class="text-gray-400 mb-6">
+                    Configura APIs específicos de Zaffex para cada estrategia de trading
+                </p>
+                
+                <div class="space-y-4" id="bot-apis-config">
+                    <!-- Se cargarán dinámicamente -->
+                </div>
+                
+                <div class="mt-6">
+                    <button class="btn-primary" onclick="generateBotAPIs()">
+                        <i class="fas fa-magic mr-2"></i>Generar APIs Automáticos
+                    </button>
+                    <button class="btn-secondary ml-2" onclick="saveAPIConfig()">
+                        <i class="fas fa-save mr-2"></i>Guardar Configuración
                     </button>
                 </div>
             </div>
