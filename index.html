@@ -1289,16 +1289,13 @@
         }
 
         // Event Listeners
-        document.getElementById('show-keys').addEventListener('change', function() {
-            const apiKeyInput = document.getElementById('zaffex-api-key');
-            const apiSecretInput = document.getElementById('zaffex-api-secret');
+        document.getElementById('show-password').addEventListener('change', function() {
+            const passwordInput = document.getElementById('zaffex-password');
             
             if (this.checked) {
-                apiKeyInput.type = 'text';
-                apiSecretInput.type = 'text';
+                passwordInput.type = 'text';
             } else {
-                apiKeyInput.type = 'password';
-                apiSecretInput.type = 'password';
+                passwordInput.type = 'password';
             }
         });
 
