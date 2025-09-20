@@ -1052,33 +1052,138 @@
         }
 
         // Zaffex Functions
-        function connectZaffex() {
-            const apiKey = document.getElementById('zaffex-api-key').value;
-            const apiSecret = document.getElementById('zaffex-api-secret').value;
+        function loginZaffex() {
+            const email = document.getElementById('zaffex-email').value;
+            const password = document.getElementById('zaffex-password').value;
+            const isDemoAccount = document.getElementById('demo-account').checked;
             
-            if (!apiKey || !apiSecret) {
-                alert('Por favor ingresa tu API Key y Secret de Zaffex');
+            if (!email || !password) {
+                alert('Por favor ingresa tu correo y contraseña de Zaffex');
                 return;
             }
             
-            // Simulate connection
+            // Simulate login process
             setTimeout(() => {
                 isZaffexConnected = true;
+                zaffexUser = {
+                    email: email,
+                    accountType: isDemoAccount ? 'Demo' : 'Real',
+                    balance: isDemoAccount ? 50000 : 12450,
+                    loginTime: new Date().toISOString()
+                };
+                
                 document.getElementById('zaffex-disconnected').classList.add('hidden');
                 document.getElementById('zaffex-connected').classList.remove('hidden');
                 document.getElementById('balance-info').classList.remove('hidden');
                 
-                alert('✅ ¡Conexión con Zaffex exitosa!');
+                document.getElementById('connected-user').textContent = email;
+                document.getElementById('account-type').textContent = zaffexUser.accountType;
+                
+                // Load bot APIs configuration
+                loadBotAPIsConfig();
+                
+                alert('✅ ¡Sesión iniciada en Zaffex exitosamente!');
             }, 2000);
         }
 
-        function disconnectZaffex() {
+        function logoutZaffex() {
             isZaffexConnected = false;
+            zaffexUser = null;
+            
             document.getElementById('zaffex-disconnected').classList.remove('hidden');
             document.getElementById('zaffex-connected').classList.add('hidden');
             document.getElementById('balance-info').classList.add('hidden');
             
-            alert('Desconectado de Zaffex');
+            alert('Sesión cerrada en Zaffex');
+        }
+
+        function loadBotAPIsConfig() {
+            const container = document.getElementById('bot-apis-config');
+            container.innerHTML = '';
+            
+            Object.keys(botAPIs).forEach(strategy => {
+                const api = botAPIs[strategy];
+                const statusColor = api.status === 'active' ? 'text-green-400' : 'text-red-400';
+                
+                container.innerHTML += `
+                    <div class="card p-4 bg-gray-700/30">
+                        <div class="flex justify-between items-start mb-3">
+                            <div>
+                                <h4 class="text-white font-medium">${strategy}</h4>
+                                <p class="text-gray-400 text-sm">API ID: ${api.id}</p>
+                            </div>
+                            <span class="${statusColor} text-sm font-medium">
+                                <i class="fas fa-circle mr-1"></i>${api.status}
+                            </span>
+                        </div>
+                        
+                        <div class="grid grid-cols-3 gap-4 text-sm">
+                            <div>
+                                <div class="text-gray-400">Último uso</div>
+                                <div class="text-white">${api.lastUsed}</div>
+                            </div>
+                            <div>
+                                <div class="text-gray-400">Trades ejecutados</div>
+                                <div class="text-white">${api.trades.toLocaleString()}</div>
+                            </div>
+                            <div>
+                                <div class="text-gray-400">Límite diario</div>
+                                <div class="text-white">10,000</div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex space-x-2 mt-3">
+                            <button class="btn-secondary text-xs" onclick="regenerateAPI('${strategy}')">
+                                <i class="fas fa-sync-alt mr-1"></i>Regenerar
+                            </button>
+                            <button class="btn-secondary text-xs" onclick="testAPI('${strategy}')">
+                                <i class="fas fa-flask mr-1"></i>Test
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function generateBotAPIs() {
+            if (!isZaffexConnected) {
+                alert('⚠️ Debes conectar tu cuenta de Zaffex primero');
+                return;
+            }
+            
+            // Simulate API generation
+            Object.keys(botAPIs).forEach(strategy => {
+                botAPIs[strategy].id = `api_${Math.random().toString(36).substr(2, 6)}`;
+                botAPIs[strategy].status = 'active';
+                botAPIs[strategy].lastUsed = new Date().toISOString().split('T')[0];
+                botAPIs[strategy].trades = 0;
+            });
+            
+            loadBotAPIsConfig();
+            alert('✅ APIs generados automáticamente para todas las estrategias');
+        }
+
+        function regenerateAPI(strategy) {
+            botAPIs[strategy].id = `api_${Math.random().toString(36).substr(2, 6)}`;
+            botAPIs[strategy].trades = 0;
+            botAPIs[strategy].lastUsed = new Date().toISOString().split('T')[0];
+            
+            loadBotAPIsConfig();
+            alert(`✅ API regenerado para ${strategy}: ${botAPIs[strategy].id}`);
+        }
+
+        function testAPI(strategy) {
+            const api = botAPIs[strategy];
+            // Simulate API test
+            setTimeout(() => {
+                alert(`✅ Test exitoso para ${strategy}\nAPI: ${api.id}\nLatencia: 45ms\nConexión: Estable`);
+            }, 1000);
+        }
+
+        function saveAPIConfig() {
+            // Simulate saving configuration
+            localStorage.setItem('botAPIs', JSON.stringify(botAPIs));
+            alert('✅ Configuración de APIs guardada correctamente');
         }
 
         function useDemoCredentials() {
