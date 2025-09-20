@@ -1,3 +1,115 @@
+// GPTading Pro - Production API Client
+// Conexión real con el backend para modo producción
+
+const API_BASE = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
+
+// Credenciales demo para testing
+const DEMO_CREDENTIALS = {
+  apiKey: "demo_api_key_12345678901234567890",
+  apiSecret: "demo_api_secret_12345678901234567890"
+};
+
+class GPTadingAPI {
+  constructor() {
+    this.baseUrl = `${API_BASE}/api`;
+    this.isDemo = process.env.NODE_ENV !== 'production';
+  }
+
+  async request(endpoint, options = {}) {
+    const url = `${this.baseUrl}${endpoint}`;
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        ...options.headers,
+      },
+      ...options,
+    };
+
+    if (config.body && typeof config.body === 'object') {
+      config.body = JSON.stringify(config.body);
+    }
+
+    const response = await fetch(url, config);
+    
+    if (!response.ok) {
+      throw new Error(`API Error: ${response.status}`);
+    }
+
+    return response.json();
+  }
+
+  // Zaffex Integration
+  async connectZaffex(credentials) {
+    return this.request('/zaffex/connect', {
+      method: 'POST',
+      body: credentials,
+    });
+  }
+
+  async getZaffexStatus() {
+    return this.request('/zaffex/status');
+  }
+
+  async getZaffexBalance() {
+    return this.request('/zaffex/balance');
+  }
+
+  async getMarketData(symbols = 'BTC/USDT,ETH/USDT,ADA/USDT,DOT/USDT') {
+    return this.request(`/zaffex/market-data?symbols=${symbols}`);
+  }
+
+  // Bot Management
+  async getBots() {
+    return this.request('/bots');
+  }
+
+  async createBot(botData) {
+    return this.request('/bots', {
+      method: 'POST',
+      body: botData,
+    });
+  }
+
+  async activateBot(botId) {
+    return this.request(`/bots/${botId}/activate`, {
+      method: 'POST',
+    });
+  }
+
+  async deactivateBot(botId) {
+    return this.request(`/bots/${botId}/deactivate`, {
+      method: 'POST',
+    });
+  }
+
+  async getBotPerformance(botId) {
+    return this.request(`/bots/${botId}/performance`);
+  }
+
+  // Portfolio Management
+  async getPortfolio() {
+    return this.request('/portfolio');
+  }
+
+  async getPortfolioHoldings() {
+    return this.request('/portfolio/holdings');
+  }
+
+  async getPortfolioPerformance(period = '7d') {
+    return this.request(`/portfolio/performance?period=${period}`);
+  }
+
+  async syncPortfolio() {
+    return this.request('/portfolio/sync', {
+      method: 'POST',
+    });
+  }
+}
+
+// Instancia global de la API
+const gptradingAPI = new GPTadingAPI();
+
+// Mock data para desarrollo y demo
 const mockData = {
   bots: [
     {
@@ -141,4 +253,6 @@ const mockData = {
   ]
 };
 
+// Export para uso en componentes
 export default mockData;
+export { gptradingAPI, DEMO_CREDENTIALS };
