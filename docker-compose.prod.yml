@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:6.0
+    container_name: gptading_mongodb
+    restart: unless-stopped
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: secure_password_change_me
+    networks:
+      - gptading_network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: gptading_backend
+    restart: unless-stopped
+    ports:
+      - "8001:8001"
+    environment:
+      - MONGO_URL=mongodb://admin:secure_password_change_me@mongodb:27017/gptading_pro_prod?authSource=admin
+      - DB_NAME=gptading_pro_prod
+    depends_on:
+      - mongodb
+    networks:
+      - gptading_network
+    volumes:
+      - ./logs:/var/log/gptading
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: gptading_frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - backend
+    networks:
+      - gptading_network
+
+volumes:
+  mongodb_data:
+
+networks:
+  gptading_network:
+    driver: bridge

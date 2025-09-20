@@ -7,7 +7,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 from models.portfolio import Portfolio, PortfolioResponse, AssetHolding, MarketData
-from services.zaffex_service import zaffex_service
+from services.production_zaffex_service import production_zaffex_service as zaffex_service
 from motor.motor_asyncio import AsyncIOMotorClient
 
 # Load environment variables
